@@ -14,7 +14,9 @@
  */
 void* serializar_paquete(t_paquete* paquete, int *bytes)
 {
-	void * magic = malloc(bytes);
+	*bytes = sizeof(int) *2 + paquete->buffer->size;
+
+	void * magic = malloc(*bytes);
 	int desplazamiento = 0;
 
 	memcpy(magic + desplazamiento, &(paquete->codigo_operacion), sizeof(int));
@@ -97,7 +99,7 @@ void enviar_mensaje(char* mensaje, int socket_cliente)
 
 	void* magic= serializar_paquete(paquete,&cant_bytes);
 
-	int status = send(socket_cliente,a_enviar,cant_bytes,0); //ponerlo en una variable el tamaño
+	int status = send(socket_cliente, magic,cant_bytes,0); //ponerlo en una variable el tamaño
 
 	free(magic);
 	free(paquete->buffer->stream);
